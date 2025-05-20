@@ -1,7 +1,7 @@
 # NSYSU Course Calendar Integration
 
 ## Task list
-- [ ] Set up Google Calendar API
+- [x] Set up Google Calendar API
 - [ ] Implement user authentication via [selcrs.nsysu.edu.tw](https://selcrs.nsysu.edu.tw)
 - [ ] Scrape necessary course information from [selcrs.nsysu.edu.tw](https://selcrs.nsysu.edu.tw)
 - [ ] Integrate course import and smart notifications into Google Calendar
