@@ -13,6 +13,9 @@ from google.auth.transport.requests import Request
 import os
 from flask import session, redirect, request
 
+# Allow OAuth2 to work over HTTP during development
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+
 app = Flask(__name__)
 app.secret_key = 'your_super_secret_key'
 
@@ -242,11 +245,10 @@ def get_courses():
 def export_to_calendar():
     try:
         data = request.json
-        courses = data.get('courses', [])
         start_date = data.get('startDate')
         end_date = data.get('endDate')
         
-        if not courses or not start_date or not end_date:
+        if not start_date or not end_date:
             return jsonify({'status': 'error', 'message': 'Missing required data'}), 400
         
         # Check if we have valid credentials
@@ -257,10 +259,14 @@ def export_to_calendar():
         calendar_id = 'primary'
         
         # Create events for each course
-        for course in courses:
-            [start_time, end_time] = course['timeRange'][0].split('~')
-            start_hour, start_minute = map(int, start_time.strip().split(':'))
-            end_hour, end_minute = map(int, end_time.strip().split(':'))
+        for course in courses:  # Use the server's course data
+            # Get the first and last time ranges to determine the full duration
+            first_time_range = course['timeRange'][0]
+            last_time_range = course['timeRange'][-1]
+            
+            # Extract start time from first range and end time from last range
+            start_time = first_time_range.split('~')[0].strip()
+            end_time = last_time_range.split('~')[1].strip()
             
             day_of_week = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].index(course['day'])
             
@@ -269,11 +275,11 @@ def export_to_calendar():
                 'location': course['location'],
                 'description': f"Instructor: {course['instructor']}" if course.get('instructor') else '',
                 'start': {
-                    'dateTime': f"{start_date}T{start_time.strip()}:00",
+                    'dateTime': f"{start_date}T{start_time}:00",
                     'timeZone': 'Asia/Taipei',
                 },
                 'end': {
-                    'dateTime': f"{start_date}T{end_time.strip()}:00",
+                    'dateTime': f"{start_date}T{end_time}:00",
                     'timeZone': 'Asia/Taipei',
                 },
                 'recurrence': [
