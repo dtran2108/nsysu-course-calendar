@@ -1,9 +1,20 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, Response
 import json
 from datetime import datetime
 import random
+import os
+from google.oauth2.credentials import Credentials
+from google.auth.transport.requests import Request
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import Flow
+from google.auth.transport.requests import Request
+import os
+from flask import session, redirect, request
 
 app = Flask(__name__)
+app.secret_key = 'your_super_secret_key'
 
 # Store courses in memory (you might want to use a database in production)
 courses = []
@@ -27,10 +38,72 @@ COURSE_COLORS = [
 	'#CFD8DC',  # Blue Grey
 ]
 
+# Google Calendar API configuration
+SCOPES = ["https://www.googleapis.com/auth/calendar"]
+IS_DESKTOP = False
+DESKTOP_CREDENTIALS_PATH = 'credentials/desktop-creds.json'
+WEB_CREDENTIALS_PATH = 'credentials/web-credentials.json'
+REDIRECT_URI = 'http://127.0.0.1:5000/oauth2callback'
+
+def get_google_calendar_service():
+    creds = None
+
+    if os.path.exists("token.json"):
+        creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = Flow.from_client_secrets_file(
+                WEB_CREDENTIALS_PATH,
+                scopes=SCOPES,
+                redirect_uri=REDIRECT_URI
+            )
+            auth_url, state = flow.authorization_url(
+                access_type='offline',
+                include_granted_scopes='true'
+            )
+            session['state'] = state
+            return redirect(auth_url)
+
+    return build("calendar", "v3", credentials=creds)
+
 @app.route("/")
 @app.route("/index")
 def index():
 	return render_template("index.html")
+
+@app.route('/authorize')
+def authorize():
+    flow = Flow.from_client_secrets_file(
+        WEB_CREDENTIALS_PATH,
+        scopes=SCOPES,
+        redirect_uri=REDIRECT_URI
+    )
+    auth_url, state = flow.authorization_url(
+        access_type='offline',
+        include_granted_scopes='true'
+    )
+    session['state'] = state
+    return redirect(auth_url)
+
+@app.route('/oauth2callback')
+def oauth2callback():
+    state = session['state']
+    flow = Flow.from_client_secrets_file(
+        WEB_CREDENTIALS_PATH,
+        scopes=SCOPES,
+        state=state,
+        redirect_uri=REDIRECT_URI
+    )
+    flow.fetch_token(authorization_response=request.url)
+    
+    creds = flow.credentials
+    with open('token.json', 'w') as token:
+        token.write(creds.to_json())
+    
+    return redirect('/calendar')
 
 @app.route("/calendar")
 def calendar():
@@ -164,6 +237,58 @@ def delete_course():
 @app.route('/get_courses', methods=['GET'])
 def get_courses():
 	return jsonify(courses)
+
+@app.route('/export_to_calendar', methods=['POST'])
+def export_to_calendar():
+    try:
+        data = request.json
+        courses = data.get('courses', [])
+        start_date = data.get('startDate')
+        end_date = data.get('endDate')
+        
+        if not courses or not start_date or not end_date:
+            return jsonify({'status': 'error', 'message': 'Missing required data'}), 400
+        
+        # Check if we have valid credentials
+        if not os.path.exists("token.json"):
+            return jsonify({'status': 'error', 'message': 'Not authenticated'}), 401
+            
+        service = get_google_calendar_service()
+        calendar_id = 'primary'
+        
+        # Create events for each course
+        for course in courses:
+            [start_time, end_time] = course['timeRange'][0].split('~')
+            start_hour, start_minute = map(int, start_time.strip().split(':'))
+            end_hour, end_minute = map(int, end_time.strip().split(':'))
+            
+            day_of_week = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].index(course['day'])
+            
+            event = {
+                'summary': course['courseName'],
+                'location': course['location'],
+                'description': f"Instructor: {course['instructor']}" if course.get('instructor') else '',
+                'start': {
+                    'dateTime': f"{start_date}T{start_time.strip()}:00",
+                    'timeZone': 'Asia/Taipei',
+                },
+                'end': {
+                    'dateTime': f"{start_date}T{end_time.strip()}:00",
+                    'timeZone': 'Asia/Taipei',
+                },
+                'recurrence': [
+                    f'RRULE:FREQ=WEEKLY;UNTIL={end_date.replace("-", "")}T235959Z;BYDAY={["SU", "MO", "TU", "WE", "TH", "FR", "SA"][day_of_week]}'
+                ],
+            }
+            
+            service.events().insert(calendarId=calendar_id, body=event).execute()
+        
+        return jsonify({'status': 'success', 'message': 'Courses exported to Google Calendar successfully'})
+        
+    except HttpError as error:
+        return jsonify({'status': 'error', 'message': f'Google Calendar API error: {str(error)}'}), 500
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': f'Error: {str(e)}'}), 500
 
 if __name__ == '__main__':
 	app.run(debug=True)
