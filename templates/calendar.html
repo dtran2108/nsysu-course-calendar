@@ -1,0 +1,467 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <title>NSYSU Course Calendar</title>
+</head>
+<body class="m-8">
+  <h1 class="text-8xl text-gray-950 tracking-tighter text-balance">NSYSU Course Calendar App</h1>
+  <div class="flex gap-4 mt-4">
+    <button id="insertCourseBtn" class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors">Insert Course</button>
+    <button id="confirmBtn" class="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition-colors hidden">Confirm</button>
+  </div>
+  <div class="mt-8">
+    <div class="grid grid-cols-6 gap-0 border border-gray-200" id="calendar">
+      <!-- Header row with days -->
+      <div class="p-4 font-bold text-center bg-gray-50"></div>
+      <div class="p-4 font-bold text-center bg-gray-50">Monday</div>
+      <div class="p-4 font-bold text-center bg-gray-50">Tuesday</div>
+      <div class="p-4 font-bold text-center bg-gray-50">Wednesday</div>
+      <div class="p-4 font-bold text-center bg-gray-50">Thursday</div>
+      <div class="p-4 font-bold text-center bg-gray-50">Friday</div>
+
+      <!-- Time slots -->
+      <div class="p-4 text-sm border-t border-gray-200">07:00 ~ 07:50</div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="07:00 ~ 07:50" data-day="Monday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="07:00 ~ 07:50" data-day="Tuesday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="07:00 ~ 07:50" data-day="Wednesday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="07:00 ~ 07:50" data-day="Thursday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="07:00 ~ 07:50" data-day="Friday"></div>
+
+      <div class="p-4 text-sm border-t border-gray-200">08:10 ~ 09:00</div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="08:10 ~ 09:00" data-day="Monday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="08:10 ~ 09:00" data-day="Tuesday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="08:10 ~ 09:00" data-day="Wednesday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="08:10 ~ 09:00" data-day="Thursday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="08:10 ~ 09:00" data-day="Friday"></div>
+
+      <div class="p-4 text-sm border-t border-gray-200">09:10 ~ 09:50</div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="09:10 ~ 09:50" data-day="Monday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="09:10 ~ 09:50" data-day="Tuesday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="09:10 ~ 09:50" data-day="Wednesday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="09:10 ~ 09:50" data-day="Thursday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="09:10 ~ 09:50" data-day="Friday"></div>
+
+      <div class="p-4 text-sm border-t border-gray-200">10:00 ~ 10:40</div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="10:00 ~ 10:40" data-day="Monday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="10:00 ~ 10:40" data-day="Tuesday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="10:00 ~ 10:40" data-day="Wednesday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="10:00 ~ 10:40" data-day="Thursday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="10:00 ~ 10:40" data-day="Friday"></div>
+
+      <div class="p-4 text-sm border-t border-gray-200">10:50 ~ 11:30</div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="10:50 ~ 11:30" data-day="Monday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="10:50 ~ 11:30" data-day="Tuesday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="10:50 ~ 11:30" data-day="Wednesday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="10:50 ~ 11:30" data-day="Thursday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="10:50 ~ 11:30" data-day="Friday"></div>
+
+      <div class="p-4 text-sm border-t border-gray-200">11:40 ~ 12:20</div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="11:40 ~ 12:20" data-day="Monday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="11:40 ~ 12:20" data-day="Tuesday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="11:40 ~ 12:20" data-day="Wednesday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="11:40 ~ 12:20" data-day="Thursday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="11:40 ~ 12:20" data-day="Friday"></div>
+
+      <div class="p-4 text-sm border-t border-gray-200">12:30 ~ 13:10</div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="12:30 ~ 13:10" data-day="Monday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="12:30 ~ 13:10" data-day="Tuesday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="12:30 ~ 13:10" data-day="Wednesday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="12:30 ~ 13:10" data-day="Thursday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="12:30 ~ 13:10" data-day="Friday"></div>
+
+      <div class="p-4 text-sm border-t border-gray-200">13:20 ~ 14:00</div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="13:20 ~ 14:00" data-day="Monday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="13:20 ~ 14:00" data-day="Tuesday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="13:20 ~ 14:00" data-day="Wednesday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="13:20 ~ 14:00" data-day="Thursday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="13:20 ~ 14:00" data-day="Friday"></div>
+
+      <div class="p-4 text-sm border-t border-gray-200">14:10 ~ 14:50</div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="14:10 ~ 14:50" data-day="Monday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="14:10 ~ 14:50" data-day="Tuesday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="14:10 ~ 14:50" data-day="Wednesday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="14:10 ~ 14:50" data-day="Thursday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="14:10 ~ 14:50" data-day="Friday"></div>
+
+      <div class="p-4 text-sm border-t border-gray-200">15:00 ~ 15:40</div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="15:00 ~ 15:40" data-day="Monday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="15:00 ~ 15:40" data-day="Tuesday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="15:00 ~ 15:40" data-day="Wednesday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="15:00 ~ 15:40" data-day="Thursday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="15:00 ~ 15:40" data-day="Friday"></div>
+
+      <div class="p-4 text-sm border-t border-gray-200">15:50 ~ 16:30</div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="15:50 ~ 16:30" data-day="Monday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="15:50 ~ 16:30" data-day="Tuesday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="15:50 ~ 16:30" data-day="Wednesday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="15:50 ~ 16:30" data-day="Thursday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="15:50 ~ 16:30" data-day="Friday"></div>
+
+      <div class="p-4 text-sm border-t border-gray-200">16:40 ~ 17:20</div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="16:40 ~ 17:20" data-day="Monday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="16:40 ~ 17:20" data-day="Tuesday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="16:40 ~ 17:20" data-day="Wednesday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="16:40 ~ 17:20" data-day="Thursday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="16:40 ~ 17:20" data-day="Friday"></div>
+
+      <div class="p-4 text-sm border-t border-gray-200">17:10 ~ 18:00</div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="17:10 ~ 18:00" data-day="Monday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="17:10 ~ 18:00" data-day="Tuesday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="17:10 ~ 18:00" data-day="Wednesday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="17:10 ~ 18:00" data-day="Thursday"></div>
+      <div class="p-4 border-t border-l border-gray-200" data-time="17:10 ~ 18:00" data-day="Friday"></div>
+    </div>
+  </div>
+  
+  <!-- Popup -->
+  <div id="selectionPopup" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center">
+    <div class="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
+      <div class="mb-6">
+        <h3 class="text-xl font-bold mb-2">Insert Course</h3>
+        <p id="selectedRange" class="text-gray-600"></p>
+      </div>
+      
+      <form id="courseForm" class="space-y-4">
+        <div>
+          <label for="courseName" class="block text-sm font-medium text-gray-700 mb-1">Course Name *</label>
+          <input type="text" id="courseName" name="courseName" required
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        
+        <div>
+          <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Location *</label>
+          <input type="text" id="location" name="location" required
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        
+        <div>
+          <label for="instructor" class="block text-sm font-medium text-gray-700 mb-1">Instructor (optional)</label>
+          <input type="text" id="instructor" name="instructor"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        
+        <div class="flex justify-end gap-2 mt-6">
+          <button type="button" onclick="closePopup()" 
+            class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Cancel</button>
+          <button type="submit" 
+            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Popup -->
+  <div id="deletePopup" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center">
+    <div class="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
+      <div class="mb-6">
+        <h3 class="text-xl font-bold mb-2">Delete Course</h3>
+        <p id="deleteCourseInfo" class="text-gray-600"></p>
+      </div>
+      
+      <div class="flex justify-end gap-2 mt-6">
+        <button onclick="closeDeletePopup()" 
+          class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Cancel</button>
+        <button id="confirmDeleteBtn"
+          class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let selectedCells = [];
+    let isSelecting = false;
+    let currentDay = null;
+    let isInsertMode = false;
+
+    // Time period mapping
+    const timePeriods = {
+      '07:00 ~ 07:50': 'A',
+      '08:10 ~ 09:00': '1',
+      '09:10 ~ 09:50': '2',
+      '10:00 ~ 10:40': '3',
+      '10:50 ~ 11:30': '4',
+      '11:40 ~ 12:20': 'B',
+      '12:30 ~ 13:10': '5',
+      '13:20 ~ 14:00': '6',
+      '14:10 ~ 14:50': '7',
+      '15:00 ~ 15:40': '8',
+      '15:50 ~ 16:30': '9',
+      '16:40 ~ 17:20': '10',
+      '17:10 ~ 18:00': '11'
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const calendar = document.getElementById('calendar');
+      const insertCourseBtn = document.getElementById('insertCourseBtn');
+      const confirmBtn = document.getElementById('confirmBtn');
+      
+      // Update time slots to include period titles
+      const timeSlots = calendar.querySelectorAll('.text-sm');
+      timeSlots.forEach(slot => {
+        const time = slot.textContent.trim();
+        const period = timePeriods[time];
+        slot.innerHTML = `<div class="flex items-center gap-2"><span class="font-bold">${period}</span><span class="text-gray-600">•</span><span>${time}</span></div>`;
+      });
+      
+      insertCourseBtn.addEventListener('click', () => {
+        isInsertMode = true;
+        insertCourseBtn.disabled = true;
+        insertCourseBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        confirmBtn.classList.remove('hidden');
+        
+        // Add hover effect to all cells
+        const cells = calendar.querySelectorAll('[data-time]');
+        cells.forEach(cell => {
+          const row = cell.parentElement;
+          const isFirstColumn = row.children[0] === cell;
+          if (!isFirstColumn) {
+            cell.classList.add('hover:bg-blue-50', 'cursor-pointer');
+          }
+        });
+      });
+
+      confirmBtn.addEventListener('click', () => {
+        isInsertMode = false;
+        insertCourseBtn.disabled = false;
+        insertCourseBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        confirmBtn.classList.add('hidden');
+        
+        // Remove hover effect from all cells
+        const cells = calendar.querySelectorAll('[data-time]');
+        cells.forEach(cell => {
+          cell.classList.remove('hover:bg-blue-50', 'cursor-pointer');
+        });
+        
+        if (selectedCells.length > 0) {
+          showPopup();
+        }
+      });
+      
+      calendar.addEventListener('click', (e) => {
+        if (!isInsertMode) return;
+        
+        const cell = e.target.closest('[data-time]');
+        if (!cell) return;
+        
+        // Check if the cell is in the first column
+        const row = cell.parentElement;
+        const isFirstColumn = row.children[0] === cell;
+        if (isFirstColumn) return;
+
+        // If clicking on a cell from a different day, clear previous selection
+        if (currentDay && cell.dataset.day !== currentDay) {
+          selectedCells.forEach(cell => cell.classList.remove('bg-blue-200'));
+          selectedCells = [];
+          currentDay = cell.dataset.day;
+        }
+
+        // If no day is selected yet, set the current day
+        if (!currentDay) {
+          currentDay = cell.dataset.day;
+        }
+        
+        // Toggle selection of the cell
+        if (selectedCells.includes(cell)) {
+          selectedCells = selectedCells.filter(c => c !== cell);
+          cell.classList.remove('bg-blue-200');
+        } else {
+          selectedCells.push(cell);
+          cell.classList.add('bg-blue-200');
+        }
+      });
+    });
+
+    function showPopup() {
+      const popup = document.getElementById('selectionPopup');
+      const selectedRange = document.getElementById('selectedRange');
+      
+      // Sort cells by time
+      selectedCells.sort((a, b) => {
+        const timeA = a.dataset.time.split('~')[0].trim();
+        const timeB = b.dataset.time.split('~')[0].trim();
+        return timeA.localeCompare(timeB);
+      });
+
+      const startTime = selectedCells[0].dataset.time.split('~')[0].trim();
+      const endTime = selectedCells[selectedCells.length - 1].dataset.time.split('~')[1].trim();
+      const day = selectedCells[0].dataset.day;
+
+      // Get period titles for the selected range
+      const periods = selectedCells.map(cell => timePeriods[cell.dataset.time]);
+      const periodText = periods.join(', ');
+
+      selectedRange.innerHTML = `
+        <div class="flex items-center gap-2">
+          <span class="text-lg font-semibold">${day}</span>
+          <span class="text-gray-600">•</span>
+          <span class="text-gray-600">${startTime} - ${endTime}</span>
+          <span class="text-gray-600">•</span>
+          <span class="text-gray-600">(${periodText})</span>
+        </div>
+      `;
+      popup.classList.remove('hidden');
+    }
+
+    function closePopup() {
+      const popup = document.getElementById('selectionPopup');
+      const form = document.getElementById('courseForm');
+      const popupTitle = popup.querySelector('h3');
+      popup.classList.add('hidden');
+      selectedCells.forEach(cell => cell.classList.remove('bg-blue-200'));
+      selectedCells = [];
+      currentDay = null;
+      form.reset();
+      // Reset popup title
+      popupTitle.textContent = 'Insert Course';
+    }
+
+    // Add form submission handler
+    document.getElementById('courseForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const courseName = document.getElementById('courseName').value;
+      const location = document.getElementById('location').value;
+      const instructor = document.getElementById('instructor').value;
+      
+      // Prepare the course data
+      const courseData = {
+        courseName,
+        location,
+        instructor,
+        day: currentDay,
+        timeRange: selectedCells.map(cell => cell.dataset.time),
+        periods: selectedCells.map(cell => timePeriods[cell.dataset.time])
+      };
+
+      try {
+        const response = await fetch('/save_course', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(courseData)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          // Update only the first cell with the course information
+          const firstCell = selectedCells[0];
+          firstCell.innerHTML = `
+            <div class="relative group">
+              <div class="text-sm font-medium">${courseName}</div>
+              <div class="text-xs text-gray-600">${location}</div>
+              ${instructor ? `<div class="text-xs text-gray-600">${instructor}</div>` : ''}
+              <div class="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button onclick="handleDelete('${result.course.added_at}')" class="p-1 text-red-600 hover:text-red-800">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          `;
+          
+          // Apply the assigned color to all selected cells
+          selectedCells.forEach(cell => {
+            cell.style.backgroundColor = result.course.color;
+            cell.style.border = '1px solid rgba(0, 0, 0, 0.1)';
+            cell.style.margin = '-1px';
+            cell.dataset.courseId = result.course.added_at;
+          });
+          
+          closePopup();
+        } else {
+          alert(result.message || 'Failed to save course. Please try again.');
+        }
+      } catch (error) {
+        console.error('Error saving course:', error);
+        alert('An error occurred while saving the course.');
+      }
+    });
+
+    // Add the handleDelete function
+    function handleDelete(courseId) {
+      console.log('Delete button clicked for course:', courseId);
+      const cells = document.querySelectorAll(`[data-course-id="${courseId}"]`);
+      showDeletePopup(courseId, cells);
+    }
+
+    function showDeletePopup(courseId, cells) {
+      console.log('Showing delete popup for course:', courseId);
+      const popup = document.getElementById('deletePopup');
+      const deleteInfo = document.getElementById('deleteCourseInfo');
+      const firstCell = cells[0];
+      
+      // Get course information
+      const courseName = firstCell.querySelector('.text-sm').textContent;
+      const location = firstCell.querySelector('.text-xs').textContent;
+      const instructor = firstCell.querySelectorAll('.text-xs')[1]?.textContent || '';
+      const day = cells[0].dataset.day;
+      const timeRanges = Array.from(cells).map(cell => cell.dataset.time);
+      const startTime = timeRanges[0].split('~')[0].trim();
+      const endTime = timeRanges[timeRanges.length - 1].split('~')[1].trim();
+      const periods = timeRanges.map(time => timePeriods[time]).filter(Boolean);
+      
+      // Update delete confirmation message
+      deleteInfo.innerHTML = `
+        <div class="space-y-2">
+          <p>Are you sure you want to delete this course?</p>
+          <div class="bg-gray-50 p-3 rounded">
+            <div class="font-medium">${courseName}</div>
+            <div class="text-sm text-gray-600">${location}</div>
+            ${instructor ? `<div class="text-sm text-gray-600">${instructor}</div>` : ''}
+            <div class="text-sm text-gray-600 mt-1">
+              ${day} • ${startTime} - ${endTime} • (${periods.join(', ')})
+            </div>
+          </div>
+        </div>
+      `;
+      
+      // Update confirm delete button handler
+      const confirmBtn = document.getElementById('confirmDeleteBtn');
+      confirmBtn.onclick = async () => {
+        try {
+          const response = await fetch('/delete_course', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ courseId })
+          });
+          
+          const result = await response.json();
+          
+          if (response.ok) {
+            // Remove the course cells
+            cells.forEach(cell => {
+              cell.innerHTML = '';
+              cell.style.backgroundColor = '';
+              cell.style.border = '';
+              cell.style.margin = '';
+              delete cell.dataset.courseId;
+            });
+            closeDeletePopup();
+          } else {
+            alert(result.message || 'Failed to delete course. Please try again.');
+          }
+        } catch (error) {
+          console.error('Error deleting course:', error);
+          alert('An error occurred while deleting the course.');
+        }
+      };
+      
+      popup.classList.remove('hidden');
+    }
+
+    function closeDeletePopup() {
+      const popup = document.getElementById('deletePopup');
+      popup.classList.add('hidden');
+    }
+  </script>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+</body>
+</html>
