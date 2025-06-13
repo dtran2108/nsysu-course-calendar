@@ -4,9 +4,9 @@
 - [x] Set up Google Calendar API
 - [ ] Implement user authentication via [selcrs.nsysu.edu.tw](https://selcrs.nsysu.edu.tw)
 - [ ] Scrape necessary course information from [selcrs.nsysu.edu.tw](https://selcrs.nsysu.edu.tw)
-- [ ] Integrate course import and smart notifications into Google Calendar
+- [x] Integrate course import into Google Calendar
 - [ ] Design login screen UI
-- [ ] Build calendar preview interface
+- [x] Build calendar preview interface
 - [ ] Create smart notification configuration UI
 
 ## Overview:
@@ -36,5 +36,20 @@ Although NSYSU already has an official app, its calendar feature lacks detailed 
 
 ## Technology Stack:
 -	`Python` for data scraping and processing
--	~~Pyglet~~ `Streamlit` for the GUI (Initially, I planned to use `Pyglet`, but I switched to `Streamlit` because I want the app to be accessible online, allowing anyone to use it without needing to install anything.)
--	`Google Calendar API` for event creation
+-	~~Pyglet~~ `Flask` for the GUI (Initially, I planned to use `Pyglet`, but I switched to `Flask` because I want the app to be accessible online, allowing anyone to use it without needing to install anything.)
+-	`Google Calendar API` for event creation and notifications
+
+## How to use
+1. Create a virtual environment:
+```
+python -m venv <your_environment>
+```
+2. Install required packages:
+```
+pip install -r requirements.txt
+```
+3. Run the app:
+```
+flask --app main run
+```
+4. Try it out at: http://127.0.0.1:5000

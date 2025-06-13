@@ -1,5 +1,9 @@
-credentials.json
 /fenv
-/credentials
-token.json
 .vercel
+token.json
+credentials
+myenv
+.env
+__pycache__
+*.pyc
+.DS_Store

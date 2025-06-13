@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify, Response
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 import random
 import os
 from google.oauth2.credentials import Credentials
@@ -12,14 +12,17 @@ from google_auth_oauthlib.flow import Flow
 from google.auth.transport.requests import Request
 import os
 from flask import session, redirect, request
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Allow OAuth2 to work over HTTP during development
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 app = Flask(__name__)
-app.secret_key = 'your_super_secret_key'
+app.secret_key = os.getenv('SECRET_KEY')
 
-# Store courses in memory (you might want to use a database in production)
+# Store courses in memory
 courses = []
 
 # Predefined set of opaque colors for courses
@@ -43,10 +46,13 @@ COURSE_COLORS = [
 
 # Google Calendar API configuration
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
-IS_DESKTOP = False
-DESKTOP_CREDENTIALS_PATH = 'credentials/desktop-creds.json'
-WEB_CREDENTIALS_PATH = 'credentials/web-credentials.json'
-REDIRECT_URI = 'http://127.0.0.1:5000/oauth2callback'
+
+IS_DESKTOP = os.getenv("IS_DESKTOP").lower() == "true"
+DESKTOP_CREDENTIALS_PATH = os.getenv("DESKTOP_CREDENTIALS_PATH")
+WEB_CREDENTIALS_PATH = os.getenv("WEB_CREDENTIALS_PATH")
+PROD_WEB_CREDENTIALS_PATH = os.getenv("PROD_WEB_CREDENTIALS_PATH")
+IS_PROD = os.getenv("PROD").lower() == "true"
+REDIRECT_URI = os.getenv("PROD_REDIRECT_URI") if IS_PROD else os.getenv("LOCAL_REDIRECT_URI")
 
 def get_google_calendar_service():
     creds = None
@@ -59,7 +65,7 @@ def get_google_calendar_service():
             creds.refresh(Request())
         else:
             flow = Flow.from_client_secrets_file(
-                WEB_CREDENTIALS_PATH,
+                PROD_WEB_CREDENTIALS_PATH if IS_PROD else WEB_CREDENTIALS_PATH,
                 scopes=SCOPES,
                 redirect_uri=REDIRECT_URI
             )
@@ -80,7 +86,7 @@ def index():
 @app.route('/authorize')
 def authorize():
     flow = Flow.from_client_secrets_file(
-        WEB_CREDENTIALS_PATH,
+        PROD_WEB_CREDENTIALS_PATH if IS_PROD else WEB_CREDENTIALS_PATH,
         scopes=SCOPES,
         redirect_uri=REDIRECT_URI
     )
@@ -95,7 +101,7 @@ def authorize():
 def oauth2callback():
     state = session['state']
     flow = Flow.from_client_secrets_file(
-        WEB_CREDENTIALS_PATH,
+        PROD_WEB_CREDENTIALS_PATH if IS_PROD else WEB_CREDENTIALS_PATH,
         scopes=SCOPES,
         state=state,
         redirect_uri=REDIRECT_URI
@@ -258,8 +264,11 @@ def export_to_calendar():
         service = get_google_calendar_service()
         calendar_id = 'primary'
         
+        # Convert start_date to datetime for manipulation
+        base_start_date = datetime.strptime(start_date, '%Y-%m-%d')
+        
         # Create events for each course
-        for course in courses:  # Use the server's course data
+        for course in courses:
             # Get the first and last time ranges to determine the full duration
             first_time_range = course['timeRange'][0]
             last_time_range = course['timeRange'][-1]
@@ -268,22 +277,39 @@ def export_to_calendar():
             start_time = first_time_range.split('~')[0].strip()
             end_time = last_time_range.split('~')[1].strip()
             
-            day_of_week = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].index(course['day'])
+            # Map days to numbers (0 = Monday, 1 = Tuesday, etc.)
+            day_mapping = {
+                'Monday': 0,
+                'Tuesday': 1,
+                'Wednesday': 2,
+                'Thursday': 3,
+                'Friday': 4
+            }
+            
+            course_day = day_mapping[course['day']]
+            base_day = base_start_date.weekday()  # 0 = Monday, 1 = Tuesday, etc.
+            
+            # Calculate days to add to reach the correct day of the week
+            days_to_add = (course_day - base_day) % 7
+            course_start_date = base_start_date + timedelta(days=days_to_add)
+            
+            # Format the adjusted start date
+            adjusted_start_date = course_start_date.strftime('%Y-%m-%d')
             
             event = {
                 'summary': course['courseName'],
                 'location': course['location'],
                 'description': f"Instructor: {course['instructor']}" if course.get('instructor') else '',
                 'start': {
-                    'dateTime': f"{start_date}T{start_time}:00",
+                    'dateTime': f"{adjusted_start_date}T{start_time}:00",
                     'timeZone': 'Asia/Taipei',
                 },
                 'end': {
-                    'dateTime': f"{start_date}T{end_time}:00",
+                    'dateTime': f"{adjusted_start_date}T{end_time}:00",
                     'timeZone': 'Asia/Taipei',
                 },
                 'recurrence': [
-                    f'RRULE:FREQ=WEEKLY;UNTIL={end_date.replace("-", "")}T235959Z;BYDAY={["SU", "MO", "TU", "WE", "TH", "FR", "SA"][day_of_week]}'
+                    f'RRULE:FREQ=WEEKLY;UNTIL={end_date.replace("-", "")}T235959Z;BYDAY={["MO", "TU", "WE", "TH", "FR"][course_day]}'
                 ],
             }
             
